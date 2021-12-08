@@ -80,18 +80,6 @@ var six = stringlist.Where(a => a.Length == 6 && a != new string(nine) && a != n
 var five = stringlist.Where(a => a.Length == 5 && nine.Except(a).Count() == 1).First().ToCharArray();
 var two = stringlist.Where(a => a.Length == 5 && a != new string(five) && a != new string(three)).First().ToCharArray();
 
-//Dictionary<int, string> map = new Dictionary<int, string>();
-//map.Add(0, new string(zero));
-//map.Add(1, new string(one));
-//map.Add(2, new string(two));
-//map.Add(3, new string(three));
-//map.Add(4, new string(four));
-//map.Add(5, new string(five));
-//map.Add(6, new string(six));
-//map.Add(7, new string(seven));
-//map.Add(8, new string(eight));
-//map.Add(9, new string(nine));
-
 List<string> list = new List<string>();
 list.Add(new string(zero));
 list.Add(new string(one));
@@ -104,34 +92,36 @@ list.Add(new string(seven));
 list.Add(new string(eight));
 list.Add(new string(nine));
 
-char[] arr = { 'f' };
+list.ForEach(a => Console.WriteLine(a));
+
 var outputlist = outputValues[0].Split(' ', StringSplitOptions.RemoveEmptyEntries).OrderBy(a => a.Length).ToList();
-//var val = list.Where(a => a.Length == outputlist[0].Length && a.Except(outputlist[0]).Count() == 0).FirstOrDefault()
+//var val = list.Where(a => a.Length == outputlist[0].Length && a.Except(outputlist[0]).Count() == 0);
 
-var data = list.IndexOf(list.Where(a => a.Length == outputlist[0].Length && a.Except(outputlist[0]).Count() == 0));
+//outputlist.ForEach(a => { Console.WriteLine(a); });
 
+int sum = 0;
+foreach (var val in outputlist)
+{
+    for (int i = 0; i < list.Count; i++)
+    {
+        if (val.Length == list[i].Length)
+        {
+            if (val.Except(list[i]).Count() == 0)
+            {
+                Console.WriteLine($"Value for {val} is Nr. " + i);
+                sum += i;
+            }
 
-val.ForEach(a => { Console.WriteLine(a); });
+        }
+    }
+}
 
+Console.WriteLine("Sum is: " + sum);
 
-//foreach(var val in outputValues)
-//{
-//    //for(int i = 0; i < list.Count; i++)
-//    //{
-//    //    if(val.Except(list[i]).Count)
-//    //    {
+//string smestring = "sme";
+//var arr3 = smestring.ToCharArray();
 
-//    //    }
-//    //}
-
-//}
-
-//Console.WriteLine(onestr);
-
-    //string smestring = "sme";
-    //var arr3 = smestring.ToCharArray();
-
-    char[] arr1 = { 'a', 'b', 'd', 'f', 'g'};
+char[] arr1 = { 'a', 'b', 'd', 'f', 'g'};
 char[] arr2 = { 'a', 'b', 'c', 'd', 'f', 'g' };
 var min = arr1.Except(arr2).ToList();
 
