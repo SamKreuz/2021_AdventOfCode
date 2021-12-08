@@ -56,20 +56,24 @@ Console.WriteLine("Fishnum Start: " + fishnum);
 
 for (int i = 0; i < 256; i++)
 {
-    //for(int j = 0; j <= 8; j++)
-    //{
-        var zeroFish = nums[0];
-        nums[0] = nums[1];
-        nums[1] = nums[2];
-        nums[2] = nums[3];
-        nums[3] = nums[4];
-        nums[4] = nums[5];
-        nums[5] = nums[6];
-        nums[6] = nums[7];
-        nums[6] += zeroFish; //old fish getting back to 6
-        nums[7] = nums[8];
-        nums[8] = zeroFish;  //new fish
-        fishnum += zeroFish;
-    //}
+    var zeroFish = nums[0];
+    for (int j = 0; j <= 8; j++)
+    {
+        if (j != 8)
+        {
+            nums[j] = nums[j + 1];
+            if (j == 6)
+            {
+                nums[j] = nums[j + 1];
+                nums[j] += zeroFish; //old fish getting back to 6
+            }
+        }
+        else
+        {
+            nums[j] = zeroFish;  //new fish
+        }
+    }
+    fishnum += zeroFish;
+
     Console.WriteLine(fishnum);
 }
