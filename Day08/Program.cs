@@ -1,4 +1,5 @@
 ﻿// Pt. 1 30min
+// Pt. 2 7h
 
 
 
@@ -16,7 +17,7 @@ int counter = 0;
 
 foreach (var item in data)
 {
-    var split = item.Split('|',StringSplitOptions.RemoveEmptyEntries).ToArray();
+    var split = item.Split('|', StringSplitOptions.RemoveEmptyEntries).ToArray();
     signalPatterns.Add(split[0]);
     outputValues.Add(split[1]);
 }
@@ -24,9 +25,9 @@ foreach (var item in data)
 foreach (var chars in signalPatterns)
 {
     var charSplit = chars.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-    foreach(var i in charSplit)
+    foreach (var i in charSplit)
     {
-        if(i.Length == 2 || i.Length == 3 || i.Length == 4 || i.Length == 7)
+        if (i.Length == 2 || i.Length == 3 || i.Length == 4 || i.Length == 7)
         {
             //Console.WriteLine(i);
             counter++;
@@ -65,63 +66,58 @@ foreach (var chars in signalPatterns)
 //var values = new[] { "abc", "def", "ghj" };
 //var str = "abcedasdkljre";
 //values.Any(str.Contains);
+int? sum = 0;
 
-
-var stringlist = signalPatterns[0].Split(' ').OrderBy(a => a.Length).ToList();
-
-var one = stringlist.Where(a => a.Length == 2).FirstOrDefault().ToCharArray();
-var seven = stringlist.Where(a => a.Length == 3).FirstOrDefault();
-var four = stringlist.Where(a => a.Length == 4).FirstOrDefault();
-var eight = stringlist.Where(a => a.Length == 7).FirstOrDefault();
-var three = stringlist.Where(a => a.Length == 5 && a.Contains(one[0]) && a.Contains(one[1])).FirstOrDefault().ToCharArray();
-var nine = stringlist.Where(a => a.Length == 6 && three.Except(a).Count() == 0).First().ToCharArray();
-var zero = stringlist.Where(a => a.Length == 6 && a.Except(one).Count() == 4).First().ToCharArray();
-var six = stringlist.Where(a => a.Length == 6 && a != new string(nine) && a != new string(zero)).First().ToCharArray();
-var five = stringlist.Where(a => a.Length == 5 && nine.Except(a).Count() == 1).First().ToCharArray();
-var two = stringlist.Where(a => a.Length == 5 && a != new string(five) && a != new string(three)).First().ToCharArray();
-
-List<string> list = new List<string>();
-list.Add(new string(zero));
-list.Add(new string(one));
-list.Add(new string(two));
-list.Add(new string(three));
-list.Add(new string(four));
-list.Add(new string(five));
-list.Add(new string(six));
-list.Add(new string(seven));
-list.Add(new string(eight));
-list.Add(new string(nine));
-
-list.ForEach(a => Console.WriteLine(a));
-
-var outputlist = outputValues[0].Split(' ', StringSplitOptions.RemoveEmptyEntries).OrderBy(a => a.Length).ToList();
-//var val = list.Where(a => a.Length == outputlist[0].Length && a.Except(outputlist[0]).Count() == 0);
-
-//outputlist.ForEach(a => { Console.WriteLine(a); });
-
-int sum = 0;
-foreach (var val in outputlist)
+for (int i = 0; i < data.Length; i++)
 {
-    for (int i = 0; i < list.Count; i++)
-    {
-        if (val.Length == list[i].Length)
-        {
-            if (val.Except(list[i]).Count() == 0)
-            {
-                Console.WriteLine($"Value for {val} is Nr. " + i);
-                sum += i;
-            }
+    var stringlist = signalPatterns[i].Split(' ').OrderBy(a => a.Length).ToList();
+    var outputlist = outputValues[i].Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
 
+    var one = stringlist.Where(a => a.Length == 2).FirstOrDefault().ToCharArray();
+    var seven = stringlist.Where(a => a.Length == 3).FirstOrDefault();
+    var four = stringlist.Where(a => a.Length == 4).FirstOrDefault();
+    var eight = stringlist.Where(a => a.Length == 7).FirstOrDefault();
+    var three = stringlist.Where(a => a.Length == 5 && a.Contains(one[0]) && a.Contains(one[1])).FirstOrDefault().ToCharArray();
+    var nine = stringlist.Where(a => a.Length == 6 && three.Except(a).Count() == 0).First().ToCharArray();
+    var zero = stringlist.Where(a => a.Length == 6 && a.Except(one).Count() == 4 && a != new string(nine)).First().ToCharArray();
+    var six = stringlist.Where(a => a.Length == 6 && a != new string(nine) && a != new string(zero)).First().ToCharArray();
+    var five = stringlist.Where(a => a.Length == 5 && nine.Except(a).Count() == 1 && a != new string(three)).First().ToCharArray();
+    var two = stringlist.Where(a => a.Length == 5 && a != new string(five) && a != new string(three)).First().ToCharArray();
+
+
+    List<string> list = new List<string>();
+    list.Add(new string(zero));
+    list.Add(new string(one));
+    list.Add(new string(two));
+    list.Add(new string(three));
+    list.Add(new string(four));
+    list.Add(new string(five));
+    list.Add(new string(six));
+    list.Add(new string(seven));
+    list.Add(new string(eight));
+    list.Add(new string(nine));
+
+    int? tempval = null;
+    foreach (var val in outputlist)
+    {
+        for (int j = 0; j < list.Count; j++)
+        {
+            if (val.Length == list[j].Length && val.Except(list[j]).Count() == 0)
+            {
+                tempval = int.Parse(tempval.ToString() + j.ToString());
+            }
         }
     }
+    sum += tempval;
 }
-
 Console.WriteLine("Sum is: " + sum);
+
+
 
 //string smestring = "sme";
 //var arr3 = smestring.ToCharArray();
 
-char[] arr1 = { 'a', 'b', 'd', 'f', 'g'};
+char[] arr1 = { 'a', 'b', 'd', 'f', 'g' };
 char[] arr2 = { 'a', 'b', 'c', 'd', 'f', 'g' };
 var min = arr1.Except(arr2).ToList();
 
@@ -135,19 +131,11 @@ var min = arr1.Except(arr2).ToList();
 
 //lala.ForEach(a => { Console.WriteLine(a); });
 
-bool StringDingBing(string s)
-{
-    return true;
-
-}
-
-var threelists = stringlist.Where(a => a.Length == 5).ToList();
-
 //Console.WriteLine(doesContain(threelists[2],one));
 
 bool doesContain(string biggerNumber, string containingNumber)
 {
-    foreach(char c in containingNumber)
+    foreach (char c in containingNumber)
     {
         if (!biggerNumber.Contains(c))
         {
