@@ -1,0 +1,147 @@
+string path = "D:/KSA/Delete/ConsoleAppAoC/ConsoleAppAoC/input.txt";
+
+var data = File.ReadAllLines(path);
+
+var numberPairs = from line in data
+                  where line.Contains(',')
+                  select line;
+
+var foldCommands = data.Where(line => line.Contains("fold")).Select(line => line.Remove(0,11).Split('=', StringSplitOptions.RemoveEmptyEntries));
+
+foreach (var command in foldCommands)
+{
+    Console.WriteLine(command[1]);
+}
+
+List<(int, int)> koords = new List<(int, int)>();
+bool[,] pointArray;
+
+int rowMax;
+int columnMax;
+
+foreach (string pair in numberPairs)
+{
+    var elem = pair.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
+    koords.Add((elem[0], elem[1]));
+}
+
+rowMax = koords.MaxBy(x => x.Item2).Item2 + 1;
+columnMax = koords.MaxBy(x => x.Item1).Item1 + 1;
+
+
+//Console.WriteLine("Row:" + rowMax + ", Column: " + columnMax);
+pointArray = new bool[rowMax, columnMax];
+
+for (int i = 0; i < rowMax; i++)
+{
+    for (int j = 0; j < columnMax; j++)
+    {
+        if (koords.Contains((j, i)))
+        {
+            pointArray[i, j] = true;
+        }
+        else
+        {
+            pointArray[i, j] = false;
+        }
+    }
+}
+
+
+//PART 1:
+
+//pointArray = Fold(pointArray, char.Parse(foldCommands.First()[0]), int.Parse(foldCommands.First()[1]));
+int length = 0;
+foreach (var pair in pointArray)
+{
+    if(pair == true)
+    {
+        length++;
+    }
+}
+//Console.WriteLine(length);
+
+
+//PART 2:
+foreach (var stringPair in foldCommands)
+{
+    pointArray = Fold(pointArray, char.Parse(stringPair[0]), int.Parse(stringPair[1]));
+}
+printArray(pointArray);
+//Console.WriteLine(pointArray.GetLength(0) + ", " + pointArray.GetLength(1));
+
+
+
+void printArray(bool[,] pointArray)
+{
+    for (int i = 0; i < pointArray.GetLength(0); i++)
+    {
+        //Console.WriteLine("Point i:" + i);
+        for(int j = 0; j < pointArray.GetLength(1); j++)
+        {
+            //Console.WriteLine("Point j:" + j);
+            if (pointArray[i, j] == true)
+            {
+                Console.Write("#" + " ");
+            }
+            else
+            {
+                Console.Write("." + " ");
+            }
+        }
+        Console.WriteLine();
+    }
+    Console.WriteLine();
+}
+
+
+bool[,] Fold(bool[,] array, char axis, int foldpoint)
+{
+    if (axis == 'y') //up
+    {
+        bool[,] newArray = new bool[foldpoint, array.GetLength(1)];  //7, 11
+
+        Array.Copy(array,0, newArray, 0, array.GetLength(1)*foldpoint);
+
+        for (int i = foldpoint + 1; i < array.GetLength(0); i++)
+        {
+            var mirrored = foldpoint - (i - foldpoint);
+            for (int row = 0; row < array.GetLength(1); row++)
+            {
+                if (array[i, row] == true)
+                {
+                    //newArray[i, row] = true;
+                    newArray[mirrored, row] = array[i, row];
+                }
+            }
+        }
+
+        return newArray;
+
+    }else{
+
+        bool[,] newArray = new bool[array.GetLength(0), foldpoint];  //11, 7
+
+        for(int i = 0; i < array.GetLength(0); i++)
+        {
+            Array.Copy(array, i * array.GetLength(1), newArray, i * newArray.GetLength(1), foldpoint);
+        }
+
+
+        for (int i = 0; i < array.GetLength(0); i++)
+        {
+
+            for (int row = foldpoint + 1; row < array.GetLength(1); row++)
+            {
+                var mirrored = foldpoint - (row - foldpoint);
+                if (array[i, row] == true)
+                {
+                    //newArray[i, row] = true;
+                    newArray[i, mirrored] = array[i, row];
+                }
+            }
+        }
+
+        return newArray;
+    }
+}
