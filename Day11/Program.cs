@@ -12,15 +12,14 @@ class Program
 
         int flashes = 0;
 
-        Dictionary<(int, int), (int, bool)> keyValues = new();
-
-        //keyValues.Add((5,6),(5, true));
+        //X, Y, Value
+        Dictionary<(int, int), (int, bool)> mainDict = new();
 
         for (int x = 0; x < arrayLength; x++)
         {
             for (int y = 0; y < arrayLength; y++)
             {
-                keyValues.Add((x, y), (array[x][y], false));
+                mainDict.Add((x, y), (array[x][y], false));
             }
         }
 
@@ -33,40 +32,34 @@ class Program
         //}
         //Console.WriteLine("---------------------");
 
+
+
+
         for (int x = 1; x <= 1; x++)
         {
-            printArray(keyValues);
-            foreach (var key in keyValues)
-            {
-                if (key.Value.Item1 == 9)
-                {
-                    keyValues[key.Key] = (0, true);
-                }
-                else
-                {
-                    var currentNumPlus = key.Value.Item1 + 1;
-                    keyValues[key.Key] = (currentNumPlus, false);
-                }
-            }
+            List<int> list = new List<int>();
+            printArray(mainDict);
 
-            printArray(keyValues);
 
-            while (keyValues.Any(x => x.Value.Item1 == 0 && x.Value.Item2 == true)) //repeat until all zeroes are false
+            printArray(mainDict);
+
+            while (mainDict.Any(x => x.Value.Item1 == 0 && x.Value.Item2 == true)) //repeat until all zeroes are false
             {
-                foreach (var key in keyValues)
+                foreach (var key in mainDict)
                 {
                     if (key.Value.Item1 == 0 && key.Value.Item2 == true)
                     {
                         Console.WriteLine("Zero Keys: " + key.Key + ", " + key.Value);
                         Flash((key.Key), (key.Value.Item1, key.Value.Item2));
-                        keyValues[key.Key] = (0, false);
-                        printArray(keyValues);
+                        mainDict[key.Key] = (0, false);
+                        printArray(mainDict);
 
                     }
                 }
             }
 
-            printArray(keyValues);
+
+            printArray(mainDict);
 
 
 
@@ -76,6 +69,25 @@ class Program
             //}
             //Console.WriteLine("------------------");
 
+        }
+
+
+        void IncreaseEnergyLevel(int x, int y)
+        {
+            foreach (var key in mainDict)
+            {
+                if (key.Value.Item1 == 9)
+                {
+                    mainDict[key.Key] = (0, true);
+                }
+                else
+                {
+                    var currentNumPlus = key.Value.Item1 + 1;
+                    mainDict[key.Key] = (currentNumPlus, false);
+                }
+            }
+
+            mainDict.Where(a => a.Value.Item1 == 9).Select(b => Flash((x, y), (b.Value.Item1, b.Value.Item2)));
         }
 
 
@@ -94,16 +106,16 @@ class Program
 
                     if (newX != -1 && newX != 10 && newY != -1 && newY != 10)
                     {
-                        if (keyValues[(newX, newY)].Item2 == false && keyValues[(newX, newY)].Item1 != 0)
+                        if (mainDict[(newX, newY)].Item2 == false && mainDict[(newX, newY)].Item1 != 0)
                         {
-                            if (keyValues[(newX, newY)].Item1 == 9)
+                            if (mainDict[(newX, newY)].Item1 == 9)
                             {
-                                keyValues[(newX, newY)] = (0, false);
+                                mainDict[(newX, newY)] = (0, false);
                             }
                             else
                             {
-                                var currentNumPlus = keyValues[(newX, newY)].Item1 + 1;
-                                keyValues[(newX, newY)] = (currentNumPlus, false);
+                                var currentNumPlus = mainDict[(newX, newY)].Item1 + 1;
+                                mainDict[(newX, newY)] = (currentNumPlus, false);
                             }
                         }
                     }

@@ -58,4 +58,19 @@ var data = "E:/INTERAKTION/CSHARP/2021_AdventOfCode/Day05/input.txt";
 
 
 
-var input = ParseInput();
+//var input = ParseInput();
+
+List<int> list = new List<int>();
+list.Add(1);
+list.Add(2);
+
+runLoop();
+
+void runLoop()
+{
+    Console.WriteLine("r");
+    foreach(var item in list)
+    {
+        runLoop();
+    }
+}
